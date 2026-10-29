@@ -10,3 +10,28 @@ describe('GET /tareas', () => {
     expect(respuesta.body).toEqual([]);
   });
 });
+
+describe('POST /tareas', () => {
+  test('Caso feliz: debe crear una tarea correctamente', async () => {
+    const respuesta = await request(app)
+      .post('/tareas')
+      .send({ titulo: 'Estudiar Jest' });
+
+    expect(respuesta.status).toBe(201);
+    expect(respuesta.body).toEqual({
+      id: 1,
+      titulo: 'Estudiar Jest'
+    });
+  });
+
+  test('Caso de error: debe rechazar una tarea sin título', async () => {
+    const respuesta = await request(app)
+      .post('/tareas')
+      .send({});
+
+    expect(respuesta.status).toBe(400);
+    expect(respuesta.body).toEqual({
+      error: 'El título de la tarea es obligatorio'
+    });
+  });
+});
